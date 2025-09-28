@@ -5,13 +5,13 @@ services:
     image: postgres:15
     container_name: customer_service_db
     environment:
-      POSTGRES_USER: customer_service_user
-      POSTGRES_PASSWORD: customer_service_pass
-      POSTGRES_DB: customer_service_db
+      POSTGRES_USER: ${CUSTOMER_DB_USER}
+      POSTGRES_PASSWORD: ${CUSTOMER_DB_PASSWORD}
+      POSTGRES_DB: ${CUSTOMER_DB_NAME}
     volumes:
       - customer_service_data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "${CUSTOMER_DB_PORT}:5432"
 
   # Customer Service
   customer-service:
@@ -20,25 +20,26 @@ services:
     depends_on:
       - postgres-customer
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-customer:5432/customer_service_db
-      SPRING_DATASOURCE_USERNAME: customer_service_user
-      SPRING_DATASOURCE_PASSWORD: customer_service_pass
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      # The application connects to the database using the internal service name (CUSTOMER_DB_HOST)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${CUSTOMER_DB_HOST}:5432/${CUSTOMER_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${CUSTOMER_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${CUSTOMER_DB_PASSWORD}
     ports:
-      - "8081:8081"
+      - "${CUSTOMER_SERVICE_PORT}:8081"
 
   # Postgres for NotificationService
   postgres-notification:
     image: postgres:15
     container_name: notification_service_db
     environment:
-      POSTGRES_USER: notification_user
-      POSTGRES_PASSWORD: notification_pass
-      POSTGRES_DB: notification_db
+      POSTGRES_USER: ${NOTIFICATION_DB_USER}
+      POSTGRES_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
+      POSTGRES_DB: ${NOTIFICATION_DB_NAME}
     volumes:
       - notification_service_data:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - "${NOTIFICATION_DB_PORT}:5432"
 
   # Notification Service
   notification-service:
@@ -47,12 +48,13 @@ services:
     depends_on:
       - postgres-notification
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-notification:5432/notification_db
-      SPRING_DATASOURCE_USERNAME: notification_user
-      SPRING_DATASOURCE_PASSWORD: notification_pass
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      # The application connects to the database using the internal service name (NOTIFICATION_DB_HOST)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${NOTIFICATION_DB_HOST}:5432/${NOTIFICATION_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${NOTIFICATION_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
     ports:
-      - "8082:8082"
+      - "${NOTIFICATION_SERVICE_PORT}:8082"
 
 volumes:
   customer_service_data:
