@@ -13,7 +13,6 @@ import java.io.Serializable;
 public class Customer implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String customerId;
     private String firstName;
     private String lastName;
