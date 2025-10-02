@@ -54,6 +54,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.support</groupId>
+            <artifactId>json-support</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>

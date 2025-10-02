@@ -5,15 +5,11 @@ import com.ghulam.customerservice.kafka.CustomerProducer;
 import com.ghulam.customerservice.model.Customer;
 import com.ghulam.customerservice.repo.CustomerRepo;
 import com.ghulam.customerservice.service.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 class CustomerController {
@@ -36,7 +32,7 @@ class CustomerController {
     @PostMapping(path = "/customer")
     public ResponseEntity<Object> createCustomer(@RequestBody CustomerDto request) {
         Customer customer = customerService.createCustomer(request);
-        customerProducer.accountActivated();
+        customerProducer.message(customer);
         return ResponseEntity.ok(customer);
     }
 }
