@@ -27,6 +27,6 @@ public class CustomerProducer {
 
     public void message(Customer customer) {
         String TOPIC = "greeting-message";
-        kafkaStringTemplate.send(TOPIC, JsonSupport.toJson(customer));
+        kafkaStringTemplate.send(TOPIC, JsonSupport.writeValueAsString(customer));
     }
 }
