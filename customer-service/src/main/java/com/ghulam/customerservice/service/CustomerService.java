@@ -27,8 +27,7 @@ public class CustomerService {
         newCustomer.setFirstName(customer.firstName());
         newCustomer.setLastName(customer.lastName());
         Customer saved = customerRepo.save(newCustomer);
-        customerProducer.sendAsync(saved, Constants.CUSTOMER_CREATED_TOPIC); // publish initial mail send
-        customerProducer.sendAsync(saved, Constants.REPORT_GENERATION_TOPIC); // publish report generation start
+        customerProducer.sendAsync(saved, Constants.CUSTOMER_CREATED_TOPIC);
         return saved;
     }
 
