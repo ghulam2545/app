@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
@@ -20,7 +21,6 @@ public class CustomerProducer {
     @Qualifier("stringKafkaTemplate")
     private final KafkaTemplate<String, String> kafkaStringTemplate;
 
-    private static final String TOPIC = "customer-created";
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerProducer.class);
 
 
@@ -29,22 +29,23 @@ public class CustomerProducer {
         this.kafkaStringTemplate = kafkaStringTemplate;
     }
 
-    public void sendAsync(Customer customer) {
+    @Async
+    public void sendAsync(Customer customer, String topic) {
         String customerJson = JsonSupport.writeValueAsString(customer);
 
         CompletableFuture<SendResult<String, String>> future =
-                kafkaStringTemplate.send(TOPIC, customerJson);
+                kafkaStringTemplate.send(topic, customerJson);
 
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 LOGGER.info("Sent message='{}' to topic='{}' with offset={}",
                         customerJson,
-                        TOPIC,
+                        topic,
                         result.getRecordMetadata().offset());
             } else {
                 LOGGER.error("Unable to send message='{}' to topic='{}' due to: {}",
                         customerJson,
-                        TOPIC,
+                        topic,
                         ex.getMessage());
             }
         });
