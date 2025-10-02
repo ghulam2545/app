@@ -6,6 +6,8 @@ import com.ghulam.customerservice.repo.CustomerRepo;
 import com.ghulam.customerservice.utils.CommonUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class CustomerService {
 
@@ -21,5 +23,9 @@ public class CustomerService {
         newCustomer.setFirstName(customer.firstName());
         newCustomer.setLastName(customer.lastName());
         return customerRepo.save(newCustomer);
+    }
+
+    public Collection<Customer> getAllCustomers() {
+        return customerRepo.findAll();
     }
 }
